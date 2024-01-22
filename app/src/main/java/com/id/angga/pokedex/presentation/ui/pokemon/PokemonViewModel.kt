@@ -24,7 +24,7 @@ class PokemonViewModel @Inject constructor(private val useCase: PokemonListUseCa
                 is Resource.Success -> {
                     Log.e("sukses", "sukses")
                     state = state.copy(
-                        pokemons = result.data?.results ?: emptyList(),
+                        pokemons = result.data ?: emptyList(),
                         isLoading = false,
                         error = null
                     )
@@ -39,6 +39,20 @@ class PokemonViewModel @Inject constructor(private val useCase: PokemonListUseCa
                 }
             }
 
+        }
+    }
+
+    fun getPokemonDetail() {
+        viewModelScope.launch {
+            when (val result = useCase.getPokemonDetail("bulbasaur")) {
+                is Resource.Success -> {
+                    Log.e("sukses detail", ""+result.data?.weight)
+                }
+
+                is Resource.Error -> {
+                    Log.e("error detail", ""+result.message)
+                }
+            }
         }
     }
 

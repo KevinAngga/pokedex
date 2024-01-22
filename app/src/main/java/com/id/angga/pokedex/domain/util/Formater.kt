@@ -7,3 +7,7 @@ fun String.formatNumberWithLeadingZeros(): String {
         else -> "#$this"
     }
 }
+
+fun String.replaceFirstChar() : String {
+    return this.replaceFirstChar { it.uppercase() }
+}
