@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +33,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.id.angga.pokedex.R
 import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
+import com.id.angga.pokedex.domain.pokemon.PokemonTypeItem
 import com.id.angga.pokedex.domain.util.formatNumberWithLeadingZeros
 import com.id.angga.pokedex.domain.util.replaceFirstChar
 import com.id.angga.pokedex.presentation.ui.theme.NormalTypeBackground
@@ -101,14 +103,32 @@ fun PokemonListItem(pokemon : PokemonDetailResponse) {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                CircularText(
-                    text = pokemon.types[0].type.name.replaceFirstChar(),
-                    background = PokemonTypeColour.fromType(pokemon.types[0].type.name).typeColor
-                )
+                ListTypePokemon(list = pokemon.types)
             }
 
         }
     }
+}
+
+@Composable
+fun ListTypePokemon(list: List<PokemonTypeItem>) {
+    LazyRow(
+        content = {
+            items(list) { item ->  
+                TypeItem(pokemonTypeItem = item)
+                Spacer(modifier = Modifier.width(12.dp))
+            }
+        }
+    )
+}
+
+
+@Composable
+fun TypeItem(pokemonTypeItem: PokemonTypeItem) {
+    CircularText(
+        text = pokemonTypeItem.type.name.replaceFirstChar(),
+        background = PokemonTypeColour.fromType(pokemonTypeItem.type.name).typeColor
+    )
 }
 
 @Composable
