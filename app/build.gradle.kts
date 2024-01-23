@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -72,6 +73,8 @@ dependencies {
 
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
 
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.7.6")
 
     // Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.48")

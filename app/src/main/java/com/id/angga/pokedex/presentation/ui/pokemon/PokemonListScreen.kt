@@ -1,6 +1,7 @@
 package com.id.angga.pokedex.presentation.ui.pokemon
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.id.angga.pokedex.R
@@ -36,19 +38,29 @@ import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
 import com.id.angga.pokedex.domain.pokemon.PokemonTypeItem
 import com.id.angga.pokedex.domain.util.formatNumberWithLeadingZeros
 import com.id.angga.pokedex.domain.util.replaceFirstChar
+import com.id.angga.pokedex.presentation.ui.navigation.Screen
+import com.id.angga.pokedex.presentation.ui.pokemon.detail.DetailViewModel
 import com.id.angga.pokedex.presentation.ui.theme.NormalTypeBackground
 import com.id.angga.pokedex.presentation.ui.theme.PoisonTypeBackground
 
 
 @Composable
-fun PokemonListScreen(pokemons : List<PokemonDetailResponse>) {
+fun PokemonListScreen(
+    pokemons : List<PokemonDetailResponse>,
+    navController: NavController,
+    detailViewModel: DetailViewModel
+) {
     Column(
         modifier = Modifier
     ) {
         LazyColumn(
             content = {
                 items(pokemons) { pokemon ->
-                    PokemonListItem(pokemon)
+                    PokemonListItem(
+                        detailViewModel,
+                        pokemon,
+                        navController = navController
+                    )
                 }
             }
         )
@@ -57,11 +69,19 @@ fun PokemonListScreen(pokemons : List<PokemonDetailResponse>) {
 
 
 @Composable
-fun PokemonListItem(pokemon : PokemonDetailResponse) {
+fun PokemonListItem(
+    detailViewModel: DetailViewModel,
+    pokemon : PokemonDetailResponse,
+    navController: NavController
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
+            .clickable {
+                detailViewModel.addPokemon(pokemon)
+                navController.navigate(Screen.DetailPage.route)
+            }
     ) {
         Row(
             modifier = Modifier
@@ -110,26 +130,7 @@ fun PokemonListItem(pokemon : PokemonDetailResponse) {
     }
 }
 
-@Composable
-fun ListTypePokemon(list: List<PokemonTypeItem>) {
-    LazyRow(
-        content = {
-            items(list) { item ->  
-                TypeItem(pokemonTypeItem = item)
-                Spacer(modifier = Modifier.width(12.dp))
-            }
-        }
-    )
-}
 
-
-@Composable
-fun TypeItem(pokemonTypeItem: PokemonTypeItem) {
-    CircularText(
-        text = pokemonTypeItem.type.name.replaceFirstChar(),
-        background = PokemonTypeColour.fromType(pokemonTypeItem.type.name).typeColor
-    )
-}
 
 @Composable
 fun CircularText(text: String,

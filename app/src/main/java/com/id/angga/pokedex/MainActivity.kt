@@ -7,11 +7,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonListScreen
+import androidx.navigation.compose.rememberNavController
+import com.id.angga.pokedex.presentation.ui.navigation.SetUpNavGraph
 import com.id.angga.pokedex.presentation.ui.pokemon.PokemonViewModel
 import com.id.angga.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,14 +20,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel.getListOfPokemon()
+
         setContent {
             PokedexTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PokemonListScreen(pokemons = viewModel.state.pokemons)
+                    val navController = rememberNavController()
+                    SetUpNavGraph(mainViewModel = viewModel, navController = navController)
                 }
             }
         }
