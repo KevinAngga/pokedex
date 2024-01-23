@@ -10,5 +10,9 @@ data class PokemonDetailResponseDto(
     @SerializedName("weight")
     var weight : Int = 0,
     @SerializedName("types")
-    var types : List<PokemonTypeItemDto> = emptyList()
+    var types : List<PokemonTypeItemDto> = emptyList(),
+    @SerializedName("stats")
+    var stats : List<PokemonStatDto>,
+    @SerializedName("abilities")
+    val abilities : List<PokemonAbilityDto>
 )

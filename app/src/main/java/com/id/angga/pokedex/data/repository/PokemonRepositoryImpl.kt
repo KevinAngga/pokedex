@@ -1,9 +1,8 @@
 package com.id.angga.pokedex.data.repository
 
-import android.util.Log
 import com.id.angga.pokedex.data.remote.PokemonApi
-import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonDetailMapImpl
-import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonListResponseMapImpl
+import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonDetailMapper
+import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonListResponseMapper
 import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
 import com.id.angga.pokedex.domain.pokemon.PokemonListResponse
 import com.id.angga.pokedex.domain.repository.PokemonRepository
@@ -12,13 +11,13 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
     private val api: PokemonApi,
-    private val pokemonListResponseMapImpl: PokemonListResponseMapImpl,
-    private val pokemonDetailMapImpl: PokemonDetailMapImpl
+    private val pokemonListResponseMapper: PokemonListResponseMapper,
+    private val pokemonDetailMapper: PokemonDetailMapper
 ) : PokemonRepository {
     override suspend fun getAllPokemon(): Resource<PokemonListResponse> {
         return try {
             val apiResponse = api.getPokemonList()
-            val mappedResponse = pokemonListResponseMapImpl.mapDtoToModel(apiResponse)
+            val mappedResponse = pokemonListResponseMapper.mapFrom(apiResponse)
             Resource.Success(
                 data = mappedResponse
             )
@@ -32,7 +31,7 @@ class PokemonRepositoryImpl @Inject constructor(
     override suspend fun getPokemonDetail(pokemonName: String): Resource<PokemonDetailResponse> {
         return try {
             val apiResponse = api.getPokemonDetail(pokemonName)
-            val mappedResponse = pokemonDetailMapImpl.mapDtoToModel(apiResponse)
+            val mappedResponse = pokemonDetailMapper.mapFrom(apiResponse)
             Resource.Success(
                 data = mappedResponse
             )
