@@ -2,9 +2,7 @@ package com.id.angga.pokedex.data.remote.pokemon
 
 import com.google.gson.annotations.SerializedName
 
-data class StatDto(
+data class MoveDto(
     @SerializedName("name")
-    var name : String = "",
-    @SerializedName("url")
-    var url : String = ""
+    var name : String = ""
 )

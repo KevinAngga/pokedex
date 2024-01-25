@@ -11,3 +11,6 @@ fun String.formatNumberWithLeadingZeros(): String {
 fun String.replaceFirstChar() : String {
     return this.replaceFirstChar { it.uppercase() }
 }
+
+fun Int.getWeightString(): String = String.format("%.1f KG", this.toFloat() / 10)
+fun Int.getHeightString(): String = String.format("%.1f M", this.toFloat() / 10)

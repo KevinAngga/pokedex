@@ -41,23 +41,23 @@ import com.id.angga.pokedex.domain.pokemon.TabMenuItem
 import com.id.angga.pokedex.domain.util.formatNumberWithLeadingZeros
 import com.id.angga.pokedex.domain.util.replaceFirstChar
 import com.id.angga.pokedex.presentation.ui.pokemon.ListTypePokemon
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonAbilityScreen
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonEvolutionScreen
+import com.id.angga.pokedex.presentation.ui.pokemon.PokemonAboutScreen
+import com.id.angga.pokedex.presentation.ui.pokemon.PokemonMovesScreen
 import com.id.angga.pokedex.presentation.ui.pokemon.PokemonStatScreen
 import com.id.angga.pokedex.presentation.ui.pokemon.PokemonTypeColour
 import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 
 var tabItem = listOf(
     TabMenuItem(
+        title = "About"
+    ),
+
+    TabMenuItem(
         title = "Base Stat"
     ),
 
     TabMenuItem(
-        title = "Evolution"
-    ),
-
-    TabMenuItem(
-        title = "Ability"
+        title = "Moves"
     )
 )
 
@@ -193,9 +193,13 @@ fun PokemonDetailScreen(
                     }
 
                     when(selectedTabIndex) {
-                        0 -> PokemonStatScreen(pokemon.stat)
-                        1 -> PokemonEvolutionScreen()
-                        2 -> PokemonAbilityScreen(pokemon.abilities)
+                        0 -> PokemonAboutScreen(
+                            height = pokemon.height,
+                            weight = pokemon.weight,
+                            abilities = pokemon.abilities
+                        )
+                        1 -> PokemonStatScreen(pokemon.stat)
+                        2 -> PokemonMovesScreen(pokemon.moves)
                     }
                 }
             }

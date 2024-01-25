@@ -58,6 +58,9 @@ val FairyType = Color(0XFFd78aba)
 val FairyTypeBackground = Color(0XFFdeb8d6)
 
 
+val fontColorBlackInActive = Color(0XFFc0c4c7)
+
+
 /** App Pallet **/
 val DarkThemePrimary = Color(0XFF121212)
 val DarkThemeSecondary = Color(0XFF7c959a)
