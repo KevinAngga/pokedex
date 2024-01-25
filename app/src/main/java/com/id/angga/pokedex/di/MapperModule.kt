@@ -76,8 +76,9 @@ class MapperModule {
     fun providePokemonDetail(
         pokemonTypeItemMapper: PokemonTypeItemMapper,
         pokemonStatMapper: PokemonStatMapper,
+        pokemonAbilityMapper: PokemonAbilityMapper
     ): PokemonDetailMapper {
-        return PokemonDetailMapper(pokemonTypeItemMapper, pokemonStatMapper)
+        return PokemonDetailMapper(pokemonTypeItemMapper, pokemonStatMapper, pokemonAbilityMapper)
     }
 
     @Provides

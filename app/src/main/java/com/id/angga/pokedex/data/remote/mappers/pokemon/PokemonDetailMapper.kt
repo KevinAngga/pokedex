@@ -7,7 +7,8 @@ import javax.inject.Inject
 
 class PokemonDetailMapper @Inject constructor(
     private val pokemonTypeListMapper: PokemonTypeItemMapper,
-    private val pokemonStatMapper: PokemonStatMapper
+    private val pokemonStatMapper: PokemonStatMapper,
+    private val pokemonAbilityMapper: PokemonAbilityMapper
 ) : MapperOut<PokemonDetailResponseDto, PokemonDetailResponse> {
     override fun mapFrom(from: PokemonDetailResponseDto): PokemonDetailResponse {
         return PokemonDetailResponse(
@@ -19,6 +20,9 @@ class PokemonDetailMapper @Inject constructor(
             },
             stat = from.stats.map {
                 pokemonStatMapper.mapFrom(it)
+            },
+            abilities = from.abilities.map {
+                pokemonAbilityMapper.mapFrom(it)
             }
         )
     }

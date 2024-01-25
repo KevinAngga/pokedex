@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -42,6 +43,7 @@ import com.id.angga.pokedex.presentation.ui.navigation.Screen
 import com.id.angga.pokedex.presentation.ui.pokemon.detail.DetailViewModel
 import com.id.angga.pokedex.presentation.ui.theme.NormalTypeBackground
 import com.id.angga.pokedex.presentation.ui.theme.PoisonTypeBackground
+import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 
 
 @Composable
@@ -52,6 +54,7 @@ fun PokemonListScreen(
 ) {
     Column(
         modifier = Modifier
+            .statusBarsPadding()
     ) {
         LazyColumn(
             content = {
@@ -98,7 +101,9 @@ fun PokemonListItem(
             ) {
                 Text(
                     text = pokemon.id.toString().formatNumberWithLeadingZeros(),
-                    color = Color.White
+                    color = Color.White,
+                    fontFamily = openSansFamily,
+                    fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -118,6 +123,7 @@ fun PokemonListItem(
                 Text(
                     text = pokemon.name.replaceFirstChar(),
                     color = Color.Black,
+                    fontFamily = openSansFamily,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -149,7 +155,9 @@ fun CircularText(text: String,
             text = text,
             style = style,
             fontSize = 12.sp,
-            color = Color.White
+            color = Color.White,
+            fontFamily = openSansFamily,
+            fontWeight = FontWeight.Light
         )
     }
 }
