@@ -2,26 +2,34 @@ package com.id.angga.pokedex.data.repository
 
 import com.id.angga.pokedex.data.remote.PokemonApi
 import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonDetailMapper
-import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonListResponseMapper
 import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
-import com.id.angga.pokedex.domain.pokemon.PokemonListResponse
 import com.id.angga.pokedex.domain.repository.PokemonRepository
 import com.id.angga.pokedex.domain.util.Resource
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
     private val api: PokemonApi,
-    private val pokemonListResponseMapper: PokemonListResponseMapper,
     private val pokemonDetailMapper: PokemonDetailMapper
 ) : PokemonRepository {
-    override suspend fun getAllPokemon(): Resource<PokemonListResponse> {
+    override suspend fun getAllPokemon(): Resource<List<PokemonDetailResponse>> {
         return try {
-            val apiResponse = api.getPokemonList()
-            val mappedResponse = pokemonListResponseMapper.mapFrom(apiResponse)
+            val listResponse = api.getPokemonList()
+            val pokemonList = mutableListOf<PokemonDetailResponse>()
+            coroutineScope {
+                listResponse.results.map {
+                    launch {
+                        val pokemonDetail = getPokemonDetail(it.name).data
+                        if (pokemonDetail != null) {
+                            pokemonList.add(pokemonDetail)
+                        }
+                    }
+                }
+            }
             Resource.Success(
-                data = mappedResponse
+                data = pokemonList
             )
-
         } catch (e  : Exception) {
             e.printStackTrace()
             Resource.Error(e.message ?: "An unknown Error Occured")

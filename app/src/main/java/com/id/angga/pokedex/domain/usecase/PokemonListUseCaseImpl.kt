@@ -10,11 +10,8 @@ class PokemonListUseCaseImpl @Inject constructor(private val pokemonRepository
     override suspend fun getPokemonList(): Resource<List<PokemonDetailResponse>> {
         return try {
             val pokemonListResponse = pokemonRepository.getAllPokemon()
-            val pokemonDetailList = pokemonListResponse.data?.results?.mapNotNull {
-                pokemonRepository.getPokemonDetail(it.name).data
-            } ?: emptyList()
             Resource.Success(
-                data = pokemonDetailList
+                data = pokemonListResponse.data?.sortedBy { it.id }
             )
         } catch (e : Exception) {
             Resource.Error("Failed to fetch Pokemon", null)
@@ -22,6 +19,6 @@ class PokemonListUseCaseImpl @Inject constructor(private val pokemonRepository
     }
 
     override suspend fun getPokemonDetail(pokemonName: String): Resource<PokemonDetailResponse> {
-        return pokemonRepository.getPokemonDetail("bulbasaur")
+        return pokemonRepository.getPokemonDetail(pokemonName)
     }
 }

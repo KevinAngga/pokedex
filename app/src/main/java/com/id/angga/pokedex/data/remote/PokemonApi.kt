@@ -10,7 +10,7 @@ interface PokemonApi {
         const val BASE_URL = "https://pokeapi.co/api/v2/"
     }
 
-    @GET("pokemon?limit=10")
+    @GET("pokemon?limit=20")
     suspend fun getPokemonList() : PokemonListResponseDto
 
     @GET("pokemon/{name}")

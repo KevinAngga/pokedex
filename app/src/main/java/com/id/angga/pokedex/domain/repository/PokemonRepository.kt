@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface PokemonRepository {
-    suspend fun getAllPokemon() : Resource<PokemonListResponse>
+    suspend fun getAllPokemon() : Resource<List<PokemonDetailResponse>>
     suspend fun getPokemonDetail(pokemonName : String) : Resource<PokemonDetailResponse>
 }
