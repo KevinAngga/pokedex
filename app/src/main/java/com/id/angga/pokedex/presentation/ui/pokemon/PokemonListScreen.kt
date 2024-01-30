@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -32,38 +30,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.id.angga.pokedex.R
 import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
-import com.id.angga.pokedex.domain.pokemon.PokemonTypeItem
 import com.id.angga.pokedex.domain.util.formatNumberWithLeadingZeros
 import com.id.angga.pokedex.domain.util.replaceFirstChar
 import com.id.angga.pokedex.presentation.ui.navigation.Screen
 import com.id.angga.pokedex.presentation.ui.pokemon.detail.DetailViewModel
 import com.id.angga.pokedex.presentation.ui.theme.NormalTypeBackground
-import com.id.angga.pokedex.presentation.ui.theme.PoisonTypeBackground
 import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 
 
 @Composable
 fun PokemonListScreen(
-    pokemons : List<PokemonDetailResponse>,
+    pokemonViewModel: PokemonViewModel,
     navController: NavController,
     detailViewModel: DetailViewModel
 ) {
+
     Column(
         modifier = Modifier
             .statusBarsPadding()
     ) {
+        var pokemons = pokemonViewModel.page.collectAsLazyPagingItems()
         LazyColumn(
             content = {
-                items(pokemons) { pokemon ->
-                    PokemonListItem(
-                        detailViewModel,
-                        pokemon,
-                        navController = navController
-                    )
+                items(pokemons.itemCount) { index ->
+                    pokemons[index]?.let {
+                        PokemonListItem(
+                            detailViewModel,
+                            it,
+                            navController = navController
+                        )
+                    }
                 }
             }
         )

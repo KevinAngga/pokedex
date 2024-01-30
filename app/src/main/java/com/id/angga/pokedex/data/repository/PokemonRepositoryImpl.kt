@@ -3,6 +3,7 @@ package com.id.angga.pokedex.data.repository
 import com.id.angga.pokedex.data.remote.PokemonApi
 import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonDetailMapper
 import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
+import com.id.angga.pokedex.domain.pokemon.PokemonList
 import com.id.angga.pokedex.domain.repository.PokemonRepository
 import com.id.angga.pokedex.domain.util.Resource
 import kotlinx.coroutines.coroutineScope
@@ -13,16 +14,17 @@ class PokemonRepositoryImpl @Inject constructor(
     private val api: PokemonApi,
     private val pokemonDetailMapper: PokemonDetailMapper
 ) : PokemonRepository {
-    override suspend fun getAllPokemon(): Resource<List<PokemonDetailResponse>> {
+    override suspend fun getAllPokemon(limit : Int, offset: Int): Resource<PokemonList> {
         return try {
-            val listResponse = api.getPokemonList()
-            val pokemonList = mutableListOf<PokemonDetailResponse>()
+            val listResponse = api.getPokemonList(limit, offset)
+            val pokemonList = PokemonList()
+            pokemonList.totalCount = listResponse.count
             coroutineScope {
                 listResponse.results.map {
                     launch {
                         val pokemonDetail = getPokemonDetail(it.name).data
                         if (pokemonDetail != null) {
-                            pokemonList.add(pokemonDetail)
+                            pokemonList.pokemonList.add(pokemonDetail)
                         }
                     }
                 }

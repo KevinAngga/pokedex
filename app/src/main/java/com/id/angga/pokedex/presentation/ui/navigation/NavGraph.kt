@@ -42,7 +42,7 @@ fun SetUpNavGraph(
             ) {
                 composable(route = Screen.HomePage.route) {
                     PokemonListScreen(
-                        pokemons = mainViewModel.state.pokemons,
+                        pokemonViewModel = mainViewModel,
                         navController,
                         detailViewModel = detailViewModel
                     )

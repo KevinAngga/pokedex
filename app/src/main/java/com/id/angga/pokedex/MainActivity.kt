@@ -32,8 +32,6 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-        viewModel.getListOfPokemon()
-
         setContent {
             PokedexTheme {
                 Surface(

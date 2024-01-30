@@ -78,8 +78,11 @@ dependencies {
 
     // Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.48")
-    implementation("com.google.android.gms:play-services-location:21.0.1")
     kapt ("com.google.dagger:hilt-android-compiler:2.48")
+
+    //Paging 3
+    implementation ("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation ("androidx.paging:paging-compose:3.3.0-alpha02")
 
     //test block
     testImplementation("junit:junit:4.13.2")
