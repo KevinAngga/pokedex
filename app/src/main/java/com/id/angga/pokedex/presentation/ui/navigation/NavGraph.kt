@@ -31,8 +31,7 @@ fun SetUpNavGraph(
 
     Scaffold {
         Column(
-            modifier = Modifier.fillMaxSize()
-                .navigationBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -50,7 +49,12 @@ fun SetUpNavGraph(
 
                 composable(Screen.DetailPage.route) {
                     PokemonDetailScreen(
-                        pokemonDetailResponse = detailViewModel.pokemon
+                        pokemonDetailResponse = detailViewModel.pokemon,
+                        navigateUp = {
+                            if (navController.canGoBack) {
+                                navController.popBackStack()
+                            }
+                        }
                     )
                 }
             }
