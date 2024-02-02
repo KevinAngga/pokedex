@@ -14,7 +14,7 @@ import android.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.id.angga.pokedex.presentation.ui.navigation.SetUpNavGraph
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonViewModel
+import com.id.angga.pokedex.presentation.ui.pokemon.list.PokemonViewModel
 import com.id.angga.pokedex.presentation.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
 

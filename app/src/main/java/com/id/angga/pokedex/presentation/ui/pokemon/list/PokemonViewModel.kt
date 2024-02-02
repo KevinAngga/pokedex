@@ -1,4 +1,4 @@
-package com.id.angga.pokedex.presentation.ui.pokemon
+package com.id.angga.pokedex.presentation.ui.pokemon.list
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -33,14 +33,6 @@ class PokemonViewModel @Inject constructor(private val useCase: PokemonListUseCa
     private val _isReady= MutableStateFlow(false)
     val isReady = _isReady.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            delay(3000L)
-        }
-    }
-
-    private var pokemons : MutableList<PokemonDetailResponse> = mutableListOf()
-
     val page = Pager(
         config = PagingConfig(pageSize = 20, prefetchDistance = 5),
         pagingSourceFactory = {
@@ -54,10 +46,9 @@ class PokemonViewModel @Inject constructor(private val useCase: PokemonListUseCa
                 currPage * PokemonApi.PAGE_SIZE)) {
                 is Resource.Success -> {
                     Log.e("sukses", "sukses")
-                    pokemons += result.data?.pokemonList as MutableList<PokemonDetailResponse>
-                    endReach.value = currPage * PokemonApi.PAGE_SIZE >= result.data!!.totalCount
+                    endReach.value = currPage * PokemonApi.PAGE_SIZE >= result.data!!.count
                     state = state.copy(
-                        pokemons = pokemons.sortedBy { it.id },
+                        pokemons = result.data.results,
                         isLoading = false,
                         error = null
                     )
@@ -75,20 +66,4 @@ class PokemonViewModel @Inject constructor(private val useCase: PokemonListUseCa
 
         }
     }
-
-    fun getPokemonDetail() {
-        viewModelScope.launch {
-            when (val result = useCase.getPokemonDetail("bulbasaur")) {
-                is Resource.Success -> {
-                    Log.e("sukses detail", ""+result.data?.weight)
-                }
-
-                is Resource.Error -> {
-                    Log.e("error detail", ""+result.message)
-                }
-            }
-        }
-    }
-
-
 }

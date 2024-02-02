@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.id.angga.pokedex.domain.pokemon.PokemonTypeItem
 import com.id.angga.pokedex.domain.util.replaceFirstChar
+import com.id.angga.pokedex.presentation.ui.pokemon.list.CircularText
 
 @Composable
 fun ListTypePokemon(list: List<PokemonTypeItem>) {

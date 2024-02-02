@@ -16,11 +16,13 @@ class RepositoryModule {
     @Provides
     fun providePokemonRepository(
         pokemonApi: PokemonApi,
+        pokemonListResponseMapper: PokemonListResponseMapper,
         pokemonDetailMapper: PokemonDetailMapper,
     ): PokemonRepository {
         return PokemonRepositoryImpl(
             pokemonApi,
-            pokemonDetailMapper
+            pokemonDetailMapper,
+            pokemonListResponseMapper
         )
     }
 }

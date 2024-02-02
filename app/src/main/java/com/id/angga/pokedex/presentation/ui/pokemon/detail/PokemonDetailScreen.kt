@@ -1,6 +1,5 @@
 package com.id.angga.pokedex.presentation.ui.pokemon.detail
 
-import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,19 +13,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,24 +36,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.id.angga.pokedex.R
-import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
-import com.id.angga.pokedex.domain.pokemon.PokemonType
-import com.id.angga.pokedex.domain.pokemon.PokemonTypeItem
 import com.id.angga.pokedex.domain.pokemon.TabMenuItem
 import com.id.angga.pokedex.domain.util.formatNumberWithLeadingZeros
 import com.id.angga.pokedex.domain.util.replaceFirstChar
 import com.id.angga.pokedex.presentation.ui.pokemon.ListTypePokemon
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonAboutScreen
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonMovesScreen
-import com.id.angga.pokedex.presentation.ui.pokemon.PokemonStatScreen
 import com.id.angga.pokedex.presentation.ui.pokemon.PokemonTypeColour
+import com.id.angga.pokedex.presentation.ui.pokemon.detail.about.PokemonAboutScreen
+import com.id.angga.pokedex.presentation.ui.pokemon.detail.moves.PokemonMovesScreen
+import com.id.angga.pokedex.presentation.ui.pokemon.detail.stat.PokemonStatScreen
+import com.id.angga.pokedex.presentation.ui.theme.NormalTypeBackground
 import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 
 var tabItem = listOf(
@@ -74,47 +68,18 @@ var tabItem = listOf(
     )
 )
 
-
-@Preview
-@Composable
-fun DetailPreview() {
-    PokemonDetailScreen(
-        navigateUp = {},
-        pokemonDetailResponse = PokemonDetailResponse(
-            id = 1,
-            name = "bulbasaur",
-            weight = 69,
-            types = listOf(
-                PokemonTypeItem(
-                    slot = 1,
-                    type = PokemonType(
-                        name = "grass"
-                    )
-                ),
-
-                PokemonTypeItem(
-                    slot = 2,
-                    type = PokemonType(
-                        name = "poison"
-                    )
-                )
-            )
-        )
-    )
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreen(
-    pokemonDetailResponse: PokemonDetailResponse,
+    pokemonDetailViewModel: PokemonDetailViewModel,
     navigateUp : () -> Unit
 ) {
-    val pokemon = pokemonDetailResponse
 
     var selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
+
+    pokemonDetailViewModel.getPokemonDetail()
 
    Scaffold (
        modifier = Modifier
@@ -123,7 +88,7 @@ fun PokemonDetailScreen(
            TopAppBar(
                title = {},
                colors = TopAppBarDefaults.topAppBarColors(
-                   containerColor = PokemonTypeColour.fromType(pokemon.types[0].type.name).background,
+                   containerColor = NormalTypeBackground,
                    actionIconContentColor = Color.White,
                    navigationIconContentColor = Color.White
                ),
@@ -144,7 +109,7 @@ fun PokemonDetailScreen(
        ) {
            Column(
                modifier = Modifier
-                   .background(PokemonTypeColour.fromType(pokemon.types[0].type.name).background)
+                   .background(NormalTypeBackground)
            ) {
                Box(
                    modifier = Modifier
@@ -158,7 +123,7 @@ fun PokemonDetailScreen(
                            verticalAlignment = Alignment.Bottom
                        ) {
                            Text(
-                               text = pokemon.name.replaceFirstChar(),
+                               text = pokemonDetailViewModel.state.pokemon.name.replaceFirstChar(),
                                fontSize = 36.sp,
                                color = Color.White,
                                fontFamily = openSansFamily,
@@ -166,7 +131,7 @@ fun PokemonDetailScreen(
                            )
 
                            Text(
-                               text = pokemon.id.toString().formatNumberWithLeadingZeros(),
+                               text = pokemonDetailViewModel.state.pokemon.id.toString().formatNumberWithLeadingZeros(),
                                fontSize = 16.sp,
                                color = Color.White,
                                fontFamily = openSansFamily,
@@ -180,7 +145,7 @@ fun PokemonDetailScreen(
                            modifier = Modifier.fillMaxWidth(),
                            horizontalArrangement = Arrangement.SpaceBetween
                        ) {
-                           ListTypePokemon(list = pokemon.types)
+                           ListTypePokemon(list = pokemonDetailViewModel.state.pokemon.types)
                        }
                    }
                }
@@ -231,12 +196,12 @@ fun PokemonDetailScreen(
 
                        when(selectedTabIndex) {
                            0 -> PokemonAboutScreen(
-                               height = pokemon.height,
-                               weight = pokemon.weight,
-                               abilities = pokemon.abilities
+                               height = pokemonDetailViewModel.state.pokemon.height,
+                               weight = pokemonDetailViewModel.state.pokemon.weight,
+                               abilities = pokemonDetailViewModel.state.pokemon.abilities
                            )
-                           1 -> PokemonStatScreen(pokemon.stat)
-                           2 -> PokemonMovesScreen(pokemon.moves)
+                           1 -> PokemonStatScreen(pokemonDetailViewModel.state.pokemon.stat)
+                           2 -> PokemonMovesScreen(pokemonDetailViewModel.state.pokemon.moves)
                        }
                    }
                }
@@ -245,7 +210,7 @@ fun PokemonDetailScreen(
            AsyncImage(
                model = ImageRequest.Builder(
                    context = LocalContext.current
-               ).data(pokemon.getImageUrl())
+               ).data(pokemonDetailViewModel.state.pokemon.getImageUrl())
                    .crossfade(true
                    ).build()
                ,

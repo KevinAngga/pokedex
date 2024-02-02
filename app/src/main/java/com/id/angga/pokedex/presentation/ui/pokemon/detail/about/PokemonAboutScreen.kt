@@ -1,4 +1,4 @@
-package com.id.angga.pokedex.presentation.ui.pokemon
+package com.id.angga.pokedex.presentation.ui.pokemon.detail.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,8 @@ import com.id.angga.pokedex.domain.pokemon.PokemonAbility
 import com.id.angga.pokedex.domain.util.getHeightString
 import com.id.angga.pokedex.domain.util.getWeightString
 import com.id.angga.pokedex.domain.util.replaceFirstChar
+import com.id.angga.pokedex.presentation.ui.pokemon.PokemonTypeColour
+import com.id.angga.pokedex.presentation.ui.pokemon.list.CircularText
 import com.id.angga.pokedex.presentation.ui.theme.fontColorBlackInActive
 import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 

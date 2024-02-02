@@ -1,4 +1,4 @@
-package com.id.angga.pokedex.presentation.ui.pokemon
+package com.id.angga.pokedex.presentation.ui.pokemon.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,11 +34,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.id.angga.pokedex.R
-import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
+import com.id.angga.pokedex.domain.pokemon.PokemonListItem
 import com.id.angga.pokedex.domain.util.formatNumberWithLeadingZeros
 import com.id.angga.pokedex.domain.util.replaceFirstChar
 import com.id.angga.pokedex.presentation.ui.navigation.Screen
-import com.id.angga.pokedex.presentation.ui.pokemon.detail.DetailViewModel
+import com.id.angga.pokedex.presentation.ui.pokemon.detail.PokemonDetailViewModel
 import com.id.angga.pokedex.presentation.ui.theme.NormalTypeBackground
 import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 
@@ -47,22 +47,22 @@ import com.id.angga.pokedex.presentation.ui.theme.openSansFamily
 fun PokemonListScreen(
     pokemonViewModel: PokemonViewModel,
     navController: NavController,
-    detailViewModel: DetailViewModel
+    pokemonDetailViewModel: PokemonDetailViewModel
 ) {
 
     Column(
         modifier = Modifier
             .statusBarsPadding()
     ) {
-        var pokemons = pokemonViewModel.page.collectAsLazyPagingItems()
+        val pokemons = pokemonViewModel.page.collectAsLazyPagingItems()
         LazyColumn(
             content = {
                 items(pokemons.itemCount) { index ->
                     pokemons[index]?.let {
                         PokemonListItem(
-                            detailViewModel,
-                            it,
-                            navController = navController
+                            navController = navController,
+                            pokemonDetailViewModel = pokemonDetailViewModel,
+                            pokemon = it
                         )
                     }
                 }
@@ -74,16 +74,16 @@ fun PokemonListScreen(
 
 @Composable
 fun PokemonListItem(
-    detailViewModel: DetailViewModel,
-    pokemon : PokemonDetailResponse,
-    navController: NavController
+    navController: NavController,
+    pokemonDetailViewModel: PokemonDetailViewModel,
+    pokemon : PokemonListItem,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
             .clickable {
-                detailViewModel.addPokemon(pokemon)
+                pokemonDetailViewModel.addPokemon(pokemon.getPokemonId())
                 navController.navigate(Screen.DetailPage.route)
             }
     ) {
@@ -91,7 +91,7 @@ fun PokemonListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(topEnd = 48.dp, bottomEnd = 48.dp))
-                .background(PokemonTypeColour.fromType(pokemon.types[0].type.name).background),
+                .background(NormalTypeBackground),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -101,7 +101,7 @@ fun PokemonListItem(
                     .padding(4.dp)
             ) {
                 Text(
-                    text = pokemon.id.toString().formatNumberWithLeadingZeros(),
+                    text = pokemon.getPokemonId().formatNumberWithLeadingZeros(),
                     color = Color.White,
                     fontFamily = openSansFamily,
                     fontWeight = FontWeight.SemiBold
@@ -130,7 +130,7 @@ fun PokemonListItem(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                ListTypePokemon(list = pokemon.types)
+//                ListTypePokemon(list = pokemon.types)
             }
 
         }

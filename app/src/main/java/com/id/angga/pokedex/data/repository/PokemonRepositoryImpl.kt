@@ -2,8 +2,10 @@ package com.id.angga.pokedex.data.repository
 
 import com.id.angga.pokedex.data.remote.PokemonApi
 import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonDetailMapper
+import com.id.angga.pokedex.data.remote.mappers.pokemon.PokemonListResponseMapper
 import com.id.angga.pokedex.domain.pokemon.PokemonDetailResponse
 import com.id.angga.pokedex.domain.pokemon.PokemonList
+import com.id.angga.pokedex.domain.pokemon.PokemonListResponse
 import com.id.angga.pokedex.domain.repository.PokemonRepository
 import com.id.angga.pokedex.domain.util.Resource
 import kotlinx.coroutines.coroutineScope
@@ -12,25 +14,27 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
     private val api: PokemonApi,
-    private val pokemonDetailMapper: PokemonDetailMapper
+    private val pokemonDetailMapper: PokemonDetailMapper,
+    private val pokemonListResponseMapper: PokemonListResponseMapper
 ) : PokemonRepository {
-    override suspend fun getAllPokemon(limit : Int, offset: Int): Resource<PokemonList> {
+    override suspend fun getAllPokemon(limit : Int, offset: Int): Resource<PokemonListResponse> {
         return try {
             val listResponse = api.getPokemonList(limit, offset)
-            val pokemonList = PokemonList()
-            pokemonList.totalCount = listResponse.count
-            coroutineScope {
-                listResponse.results.map {
-                    launch {
-                        val pokemonDetail = getPokemonDetail(it.name).data
-                        if (pokemonDetail != null) {
-                            pokemonList.pokemonList.add(pokemonDetail)
-                        }
-                    }
-                }
-            }
+            var response = pokemonListResponseMapper.mapFrom(listResponse)
+//            val pokemonList = PokemonList()
+//            pokemonList.totalCount = listResponse.count
+//            coroutineScope {
+//                listResponse.results.map {
+//                    launch {
+//                        val pokemonDetail = getPokemonDetail(it.name).data
+//                        if (pokemonDetail != null) {
+//                            pokemonList.pokemonList.add(pokemonDetail)
+//                        }
+//                    }
+//                }
+//            }
             Resource.Success(
-                data = pokemonList
+                data = response
             )
         } catch (e  : Exception) {
             e.printStackTrace()

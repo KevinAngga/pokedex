@@ -1,4 +1,4 @@
-package com.id.angga.pokedex.presentation.ui.pokemon
+package com.id.angga.pokedex.presentation.ui.pokemon.detail.stat
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
